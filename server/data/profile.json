@@ -1,0 +1,35 @@
+{
+  "name": "Arman Khachatryan",
+  "username": "@arman_khachatryan",
+  "age": 16,
+  "location": "Armenia",
+  "mainDirection": "3D Animation / Animation / Programming",
+  "heroTitle": "Hi, I'm Arman",
+  "heroSubtitle": "3D Animator & Programmer",
+  "heroDescription": "I create 3D animations, fight animations and digital projects. Passionate about animation and programming.",
+  "about": "I'm Arman Khachatryan, a 16-year-old animator and programmer from Armenia. I create 3D animations, fight animations and digital projects. I am also interested in programming, backend development and machine learning.",
+  "interests": [
+    "3D Animation",
+    "Fight Animation",
+    "Character Animation",
+    "Programming",
+    "Machine Learning"
+  ],
+  "skills": [
+    "3D Animation",
+    "Blender",
+    "Maya",
+    "Animation",
+    "Video Editing",
+    "Python",
+    "JavaScript",
+    "Node.js",
+    "Machine Learning"
+  ],
+  "email": "armanxachatryan029@gmail.com",
+  "social": {
+    "github": "https://github.com/armanxachatryan029-dev",
+    "instagram": "https://www.instagram.com/armanxa4atryan/",
+    "youtube": "https://www.youtube.com/@ArmanXachatryan-x7m"
+  }
+}

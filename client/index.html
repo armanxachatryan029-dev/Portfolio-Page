@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arman Khachatryan — Portfolio</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="#" class="nav-logo" id="nav-name">Arman Khachatryan</a>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#work">Work</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ===== HERO SECTION ===== -->
+  <section class="hero" id="hero">
+    <div class="container hero-container">
+      <div class="hero-content fade-in">
+        <h1 class="hero-title" id="hero-title">Hi, I'm Arman</h1>
+        <p class="hero-subtitle" id="hero-subtitle">3D Animator & Programmer</p>
+        <p class="hero-description" id="hero-description">
+          I create 3D animations, fight animations and digital projects.
+        </p>
+        <div class="hero-buttons">
+          <a href="#work" class="btn btn-primary">View My Work</a>
+          <a href="#contact" class="btn btn-outline">Contact Me</a>
+        </div>
+      </div>
+      <div class="hero-avatar fade-in">
+        <img src="/images/avatar.jpg" alt="Arman Khachatryan" id="hero-avatar"
+             onerror="this.src='/images/avatar-placeholder.png'">
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT SECTION ===== -->
+  <section class="section" id="about">
+    <div class="container">
+      <h2 class="section-title">About Me</h2>
+      <div class="about-grid">
+        <div class="about-info">
+          <div class="about-item">
+            <span class="about-label">Name</span>
+            <span class="about-value" id="about-name">Arman Khachatryan</span>
+          </div>
+          <div class="about-item">
+            <span class="about-label">Age</span>
+            <span class="about-value" id="about-age">16</span>
+          </div>
+          <div class="about-item">
+            <span class="about-label">Location</span>
+            <span class="about-value" id="about-location">Armenia</span>
+          </div>
+          <div class="about-item">
+            <span class="about-label">Direction</span>
+            <span class="about-value" id="about-direction">3D Animation / Programming</span>
+          </div>
+        </div>
+        <div class="about-text">
+          <p id="about-text">Loading...</p>
+          <div class="about-interests" id="about-interests"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SKILLS SECTION ===== -->
+  <section class="section section-dark" id="skills">
+    <div class="container">
+      <h2 class="section-title">Skills</h2>
+      <div class="skills-grid" id="skills-grid">
+        <!-- Skills cards are loaded from profile.json -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PORTFOLIO / WORK SECTION ===== -->
+  <section class="section" id="work">
+    <div class="container">
+      <h2 class="section-title">My Work</h2>
+      <div class="projects-grid" id="projects-grid">
+        <!-- Project cards are loaded from projects.json via API -->
+        <p class="loading-text">Loading projects...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT SECTION ===== -->
+  <section class="section section-dark" id="contact">
+    <div class="container">
+      <h2 class="section-title">Contact Me</h2>
+      <div class="contact-grid" id="contact-links">
+        <!-- Contact links loaded from profile.json -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; <span id="footer-year"></span> <span id="footer-name">Arman Khachatryan</span>. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/projects.js"></script>
+</body>
+</html>

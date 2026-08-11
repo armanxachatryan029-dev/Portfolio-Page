@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — Portfolio</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+  <!-- ===== LOGIN FORM (shown when not logged in) ===== -->
+  <div class="admin-login" id="login-section">
+    <div class="login-box">
+      <h1>Admin Login</h1>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="login-username">Username</label>
+          <input type="text" id="login-username" required autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Log In</button>
+        <p class="form-error" id="login-error"></p>
+      </form>
+      <a href="/" class="back-link">← Back to site</a>
+    </div>
+  </div>
+
+  <!-- ===== DASHBOARD (shown when logged in) ===== -->
+  <div class="admin-dashboard hidden" id="dashboard-section">
+    <header class="admin-header">
+      <h1>Admin Dashboard</h1>
+      <div class="admin-header-actions">
+        <a href="/" class="btn btn-outline btn-sm">View Site</a>
+        <button class="btn btn-outline btn-sm" id="logout-btn">Log Out</button>
+      </div>
+    </header>
+
+    <div class="admin-content container">
+
+      <!-- Add / Edit Project Form -->
+      <section class="admin-section">
+        <h2 id="form-title">Add Project</h2>
+        <form id="project-form" enctype="multipart/form-data">
+          <input type="hidden" id="project-id">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="project-title">Title</label>
+              <input type="text" id="project-title" required placeholder="Boyka Fight Animation">
+            </div>
+            <div class="form-group">
+              <label for="project-category">Category</label>
+              <input type="text" id="project-category" placeholder="3D Animation">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="project-description">Description</label>
+            <textarea id="project-description" rows="3" placeholder="A short description of the project"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="project-type">Project Type</label>
+              <select id="project-type">
+                <option value="video">Video (MP4 / WebM / YouTube)</option>
+                <option value="link">External Link</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="project-thumbnail">Thumbnail</label>
+              <input type="file" id="project-thumbnail" accept="image/*">
+            </div>
+          </div>
+
+          <!-- Video fields (shown when type = video) -->
+          <div id="video-fields">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="project-video">Video File (MP4 / WebM)</label>
+                <input type="file" id="project-video" accept="video/mp4,video/webm">
+              </div>
+              <div class="form-group">
+                <label for="project-video-url">Or Video URL (YouTube)</label>
+                <input type="url" id="project-video-url" placeholder="https://youtube.com/watch?v=...">
+              </div>
+            </div>
+          </div>
+
+          <!-- Link field (shown when type = link) -->
+          <div class="form-group hidden" id="link-field">
+            <label for="project-url">Project URL</label>
+            <input type="url" id="project-url" placeholder="https://example.com">
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="submit-btn">Add Project</button>
+            <button type="button" class="btn btn-outline hidden" id="cancel-edit-btn">Cancel Edit</button>
+          </div>
+          <p class="form-message" id="form-message"></p>
+        </form>
+      </section>
+
+      <!-- Project List -->
+      <section class="admin-section">
+        <h2>All Projects</h2>
+        <div class="admin-project-list" id="admin-project-list">
+          <p class="loading-text">Loading projects...</p>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>
