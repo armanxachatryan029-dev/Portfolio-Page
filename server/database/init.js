@@ -8,6 +8,7 @@ require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
 const pool = require("../db");
+const runMigrations = require("./runMigrations");
 
 async function initDatabase({ closePool = false } = {}) {
   if (!process.env.DATABASE_URL) {
@@ -18,6 +19,7 @@ async function initDatabase({ closePool = false } = {}) {
   const schema = fs.readFileSync(schemaPath, "utf8");
 
   await pool.query(schema);
+  await runMigrations();
 
   if (closePool) {
     await pool.end();

@@ -179,6 +179,7 @@ async function loadAdminProjects() {
         <div class="admin-project-actions">
           <button class="btn-edit" onclick="editProject('${p.id}')">Edit</button>
           <button class="btn-delete" onclick="deleteProject('${p.id}')">Delete</button>
+          <button class="btn-pin${p.isFeatured ? " btn-pin--active" : ""}" onclick="togglePin('${p.id}', ${Boolean(p.isFeatured)})">${p.isFeatured ? "📌 Pinned" : "📌 Pin"}</button>
         </div>
       </div>
     `
@@ -220,6 +221,23 @@ async function editProject(id) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   } catch (err) {
     alert("Could not load project for editing.");
+  }
+}
+
+// Toggle pin / featured status
+async function togglePin(id, currentlyFeatured) {
+  const formData = new FormData();
+  formData.append("isFeatured", currentlyFeatured ? "false" : "true");
+
+  try {
+    const res = await fetch("/api/projects/" + id, { method: "PUT", body: formData });
+    if (res.ok) {
+      loadAdminProjects();
+    } else {
+      alert("Could not update pin status.");
+    }
+  } catch (err) {
+    alert("Connection error.");
   }
 }
 

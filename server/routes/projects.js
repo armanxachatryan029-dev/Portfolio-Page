@@ -34,10 +34,17 @@ function rowToProject(row) {
     videoUrl: row.video_url,
     videoFile: row.video_file,
     projectUrl: row.project_url,
+    isFeatured: Boolean(row.is_featured),
     createdAt: row.created_at instanceof Date
       ? row.created_at.toISOString()
       : row.created_at,
   };
+}
+
+function parseBoolean(value) {
+  if (value === undefined || value === null || value === "") return undefined;
+  if (typeof value === "boolean") return value;
+  return value === "true" || value === "1";
 }
 
 // Helper: generate unique ID
@@ -69,7 +76,7 @@ const upload = multer({
 router.get("/", async (req, res) => {
   try {
     const result = await pool.query(
-      "SELECT * FROM projects ORDER BY created_at DESC"
+      "SELECT * FROM projects ORDER BY is_featured DESC, created_at DESC"
     );
     res.json(result.rows.map(rowToProject));
   } catch (err) {
@@ -112,7 +119,7 @@ router.post(
   ]),
   async (req, res) => {
     try {
-      const { title, description, category, projectType, videoUrl, projectUrl } =
+      const { title, description, category, projectType, videoUrl, projectUrl, isFeatured } =
         req.body;
 
       const id = generateId();
@@ -122,12 +129,13 @@ router.post(
       const videoFile = req.files?.video
         ? "/videos/" + req.files.video[0].filename
         : "";
+      const featured = parseBoolean(isFeatured) ?? false;
 
       const result = await pool.query(
         `INSERT INTO projects (
           id, title, description, category, project_type,
-          thumbnail_url, video_url, video_file, project_url
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+          thumbnail_url, video_url, video_file, project_url, is_featured
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         RETURNING *`,
         [
           id,
@@ -139,6 +147,7 @@ router.post(
           videoUrl || "",
           videoFile,
           projectUrl || "",
+          featured,
         ]
       );
 
@@ -174,7 +183,7 @@ router.put(
       }
 
       const existing = existingResult.rows[0];
-      const { title, description, category, projectType, videoUrl, projectUrl } =
+      const { title, description, category, projectType, videoUrl, projectUrl, isFeatured } =
         req.body;
 
       const updatedTitle = title ?? existing.title;
@@ -183,6 +192,10 @@ router.put(
       const updatedProjectType = projectType ?? existing.project_type;
       const updatedVideoUrl = videoUrl ?? existing.video_url;
       const updatedProjectUrl = projectUrl ?? existing.project_url;
+      const updatedIsFeatured =
+        parseBoolean(isFeatured) !== undefined
+          ? parseBoolean(isFeatured)
+          : existing.is_featured;
       const updatedThumbnail = req.files?.thumbnail
         ? "/images/" + req.files.thumbnail[0].filename
         : existing.thumbnail_url;
@@ -200,8 +213,9 @@ router.put(
           project_url = $6,
           thumbnail_url = $7,
           video_file = $8,
+          is_featured = $9,
           updated_at = NOW()
-        WHERE id = $9
+        WHERE id = $10
         RETURNING *`,
         [
           updatedTitle,
@@ -212,6 +226,7 @@ router.put(
           updatedProjectUrl,
           updatedThumbnail,
           updatedVideoFile,
+          updatedIsFeatured,
           req.params.id,
         ]
       );

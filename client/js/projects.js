@@ -20,18 +20,30 @@ async function loadProjects() {
       return;
     }
 
-    const featured = projects[0];
-    const rest = projects.slice(1);
+    const featured = projects.filter((p) => p.isFeatured);
+    const normal = projects.filter((p) => !p.isFeatured);
 
-    let html = renderFeaturedProject(featured);
+    let html = "";
 
-    if (rest.length > 0) {
-      html += `<div class="work-grid">${rest.map((p) => renderProjectCard(p)).join("")}</div>`;
+    if (featured.length > 0) {
+      html += `<h3 class="work-subsection-title">Featured</h3>`;
+      html += featured.map((p) => renderFeaturedProject(p)).join("");
+    }
+
+    if (normal.length > 0) {
+      if (featured.length > 0) {
+        html += `<h3 class="work-subsection-title work-subsection-title--all">All Work</h3>`;
+      }
+      html += `<div class="work-grid">${normal.map((p) => renderProjectCard(p)).join("")}</div>`;
+    }
+
+    if (featured.length > 0 && normal.length === 0) {
+      // Only featured projects — already rendered above
     }
 
     grid.innerHTML = html;
 
-    grid.querySelectorAll(".reveal, .work-featured, .project-card").forEach((el, i) => {
+    grid.querySelectorAll(".work-featured, .project-card, .work-subsection-title").forEach((el, i) => {
       el.classList.add("reveal");
       if (i > 0) el.classList.add("reveal-delay-" + Math.min(i, 4));
       if (window.scrollRevealObserver) window.scrollRevealObserver.observe(el);
@@ -57,7 +69,7 @@ function renderFeaturedProject(project) {
     <article class="work-featured reveal">
       <a href="/project/${project.id}" class="work-featured-link">
         <div class="work-featured-media">
-          <span class="project-badge project-badge--lg">Featured Project</span>
+          <span class="project-badge project-badge--lg">⭐ Featured</span>
           ${playBtn}
           <img class="project-thumbnail"
                src="${project.thumbnail}"

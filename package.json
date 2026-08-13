@@ -7,7 +7,8 @@
     "start": "node server/server.js",
     "dev": "nodemon server/server.js",
     "db:init": "node server/database/init.js",
-    "db:migrate": "node server/database/migrate.js"
+    "db:migrate": "node server/database/migrate.js",
+    "db:migrate:featured": "node server/database/migrate-featured.js"
   },
   "keywords": [
     "portfolio",

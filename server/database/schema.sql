@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS projects (
   video_url     TEXT DEFAULT '',
   video_file    TEXT DEFAULT '',
   project_url   TEXT DEFAULT '',
+  is_featured   BOOLEAN NOT NULL DEFAULT FALSE,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
