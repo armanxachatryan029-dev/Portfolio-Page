@@ -4,117 +4,294 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Arman Khachatryan — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
+  <!-- Global background layers -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--top" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--bottom" aria-hidden="true"></div>
+
   <!-- ===== NAVIGATION ===== -->
   <nav class="navbar" id="navbar">
     <div class="container nav-container">
-      <a href="#" class="nav-logo" id="nav-name">Arman Khachatryan</a>
+      <a href="#hero" class="nav-logo">KHACHATRYAN</a>
 
       <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span>
       </button>
 
       <ul class="nav-links" id="nav-links">
-        <li><a href="#about">About</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#work">Work</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="#hero" data-nav="home">Home</a></li>
+        <li><a href="#about" data-nav="about">About</a></li>
+        <li><a href="#work" data-nav="work">Work</a></li>
+        <li><a href="#skills" data-nav="skills">Skills</a></li>
+        <li><a href="#process" data-nav="process">Process</a></li>
+        <li><a href="#contact" data-nav="contact">Contact</a></li>
       </ul>
+
+      <a href="#contact" class="nav-badge">Available for Work</a>
     </div>
   </nav>
 
-  <!-- ===== HERO SECTION ===== -->
+  <!-- ===== HERO ===== -->
   <section class="hero" id="hero">
+    <div class="hero-deco hero-deco--orb" aria-hidden="true"></div>
+    <div class="hero-deco hero-deco--line hero-deco--line-1" aria-hidden="true"></div>
+    <div class="hero-deco hero-deco--line hero-deco--line-2" aria-hidden="true"></div>
+    <div class="hero-deco hero-deco--corner" aria-hidden="true"></div>
+    <span class="hero-float-label hero-float-label--1" aria-hidden="true">3D ANIMATION</span>
+    <span class="hero-float-label hero-float-label--2" aria-hidden="true">RENDER</span>
+    <span class="hero-float-label hero-float-label--3" aria-hidden="true">016</span>
+
     <div class="container hero-container">
-      <div class="hero-content fade-in">
-        <h1 class="hero-title" id="hero-title">Hi, I'm Arman</h1>
-        <p class="hero-subtitle" id="hero-subtitle">3D Animator & Programmer</p>
-        <p class="hero-description" id="hero-description">
-          I create 3D animations, fight animations and digital projects.
-        </p>
+      <div class="hero-content reveal">
+        <p class="hero-eyebrow" id="hero-eyebrow">Creative 3D Artist & Developer</p>
+
+        <div class="hero-name-block">
+          <span class="hero-name-first" id="hero-name-first">ARMAN</span>
+          <span class="hero-name-last" id="hero-name-last">KHACHATRYAN</span>
+        </div>
+
+        <p class="hero-tags" id="hero-tags">3D Animation • Character Animation • Programming</p>
+        <p class="hero-description" id="hero-description">Creating cinematic animation and interactive digital experiences.</p>
+
         <div class="hero-buttons">
           <a href="#work" class="btn btn-primary">View My Work</a>
           <a href="#contact" class="btn btn-outline">Contact Me</a>
         </div>
+
+        <div class="hero-meta">
+          <span class="hero-meta-item"><strong id="hero-location">Armenia</strong> — Location</span>
+          <span class="hero-meta-divider"></span>
+          <span class="hero-meta-item"><strong id="hero-role">3D Animator</strong> — Role</span>
+        </div>
       </div>
-      <div class="hero-avatar fade-in">
-        <img src="/images/avatar.jpg" alt="Arman Khachatryan" id="hero-avatar"
-             onerror="this.src='/images/avatar-placeholder.png'">
+
+      <div class="hero-visual reveal reveal-delay-1">
+        <div class="hero-visual-frame">
+          <div class="hero-visual-glow" aria-hidden="true"></div>
+          <div class="hero-visual-border" aria-hidden="true"></div>
+          <img src="/images/avatar-placeholder.png" alt="Arman Khachatryan" id="hero-avatar"
+               onerror="this.src='/images/placeholder-project.svg'">
+          <div class="hero-visual-tag">PORTFOLIO 2026</div>
+        </div>
+        <div class="hero-visual-stats" aria-hidden="true">
+          <div class="hero-stat-pill">BLENDER</div>
+          <div class="hero-stat-pill">MAYA</div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ===== ABOUT SECTION ===== -->
-  <section class="section" id="about">
+  <!-- ===== MARQUEE ===== -->
+  <div class="marquee-wrap" aria-hidden="true">
+    <div class="marquee">
+      <div class="marquee-track" id="marquee-track-a"></div>
+      <div class="marquee-track" id="marquee-track-b"></div>
+    </div>
+  </div>
+
+  <!-- ===== STATS STRIP ===== -->
+  <section class="stats-strip" id="stats">
     <div class="container">
-      <h2 class="section-title">About Me</h2>
+      <div class="stats-grid" id="stats-grid">
+        <!-- Filled from profile interests / direction -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section class="section section-about" id="about">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-num">01</span>
+        <div>
+          <span class="section-label">About Me</span>
+          <h2 class="section-title">The Artist Behind<br>the Animation</h2>
+        </div>
+      </div>
+
       <div class="about-grid">
-        <div class="about-info">
-          <div class="about-item">
-            <span class="about-label">Name</span>
-            <span class="about-value" id="about-name">Arman Khachatryan</span>
-          </div>
-          <div class="about-item">
-            <span class="about-label">Age</span>
-            <span class="about-value" id="about-age">16</span>
-          </div>
-          <div class="about-item">
-            <span class="about-label">Location</span>
-            <span class="about-value" id="about-location">Armenia</span>
-          </div>
-          <div class="about-item">
-            <span class="about-label">Direction</span>
-            <span class="about-value" id="about-direction">3D Animation / Programming</span>
+        <div class="about-editorial reveal">
+          <p class="about-lead" id="about-lead">Loading...</p>
+          <p class="about-text" id="about-text"></p>
+          <div class="about-specialized">
+            <span class="about-specialized-label">Specialized In</span>
+            <div class="about-interests" id="about-interests"></div>
           </div>
         </div>
-        <div class="about-text">
-          <p id="about-text">Loading...</p>
-          <div class="about-interests" id="about-interests"></div>
+
+        <div class="about-info-grid reveal reveal-delay-1">
+          <div class="info-card">
+            <span class="info-card-label">Age</span>
+            <span class="info-card-value" id="about-age">16</span>
+          </div>
+          <div class="info-card">
+            <span class="info-card-label">Role</span>
+            <span class="info-card-value" id="about-direction">3D Animator</span>
+          </div>
+          <div class="info-card">
+            <span class="info-card-label">Location</span>
+            <span class="info-card-value" id="about-location">Armenia</span>
+          </div>
+          <div class="info-card info-card--wide">
+            <span class="info-card-label">Focus</span>
+            <span class="info-card-value" id="about-focus">Animation & Programming</span>
+          </div>
+          <div class="info-card info-card--accent">
+            <span class="info-card-label">Currently Working With</span>
+            <div class="info-card-tools" id="about-tools"></div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ===== SKILLS SECTION ===== -->
-  <section class="section section-dark" id="skills">
+  <!-- ===== WORK ===== -->
+  <section class="section section-work" id="work">
     <div class="container">
-      <h2 class="section-title">Skills</h2>
-      <div class="skills-grid" id="skills-grid">
-        <!-- Skills cards are loaded from profile.json -->
+      <div class="section-head reveal">
+        <span class="section-num">02</span>
+        <div>
+          <span class="section-label">Selected Work</span>
+          <h2 class="section-title">My Portfolio</h2>
+          <p class="section-desc">Animation projects and creative digital work.</p>
+        </div>
       </div>
-    </div>
-  </section>
 
-  <!-- ===== PORTFOLIO / WORK SECTION ===== -->
-  <section class="section" id="work">
-    <div class="container">
-      <h2 class="section-title">My Work</h2>
-      <div class="projects-grid" id="projects-grid">
-        <!-- Project cards are loaded from projects.json via API -->
+      <div class="work-showcase" id="projects-grid">
         <p class="loading-text">Loading projects...</p>
       </div>
     </div>
   </section>
 
-  <!-- ===== CONTACT SECTION ===== -->
-  <section class="section section-dark" id="contact">
+  <!-- ===== SKILLS ===== -->
+  <section class="section section-skills" id="skills">
     <div class="container">
-      <h2 class="section-title">Contact Me</h2>
-      <div class="contact-grid" id="contact-links">
-        <!-- Contact links loaded from profile.json -->
+      <div class="section-head reveal">
+        <span class="section-num">03</span>
+        <div>
+          <span class="section-label">Expertise</span>
+          <h2 class="section-title">Skills & Tools</h2>
+        </div>
       </div>
+
+      <div class="skills-showcase" id="skills-grid"></div>
+    </div>
+  </section>
+
+  <!-- ===== JOURNEY ===== -->
+  <section class="section section-journey" id="journey">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-num">04</span>
+        <div>
+          <span class="section-label">My Journey</span>
+          <h2 class="section-title">Path & Focus</h2>
+        </div>
+      </div>
+      <div class="journey-track" id="journey-track"></div>
+    </div>
+  </section>
+
+  <!-- ===== PROCESS ===== -->
+  <section class="section section-process" id="process">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-num">05</span>
+        <div>
+          <span class="section-label">Workflow</span>
+          <h2 class="section-title">My Process</h2>
+        </div>
+      </div>
+
+      <div class="process-grid">
+        <div class="process-step reveal">
+          <span class="process-num">01</span>
+          <h3 class="process-title">Idea</h3>
+          <p class="process-desc">Concept, references and creative direction for the animation.</p>
+        </div>
+        <div class="process-step reveal reveal-delay-1">
+          <span class="process-num">02</span>
+          <h3 class="process-title">Blocking</h3>
+          <p class="process-desc">Rough poses, timing and story beats before detail work.</p>
+        </div>
+        <div class="process-step reveal reveal-delay-2">
+          <span class="process-num">03</span>
+          <h3 class="process-title">Animation</h3>
+          <p class="process-desc">Keyframe animation, body mechanics and character performance.</p>
+        </div>
+        <div class="process-step reveal reveal-delay-3">
+          <span class="process-num">04</span>
+          <h3 class="process-title">Polish</h3>
+          <p class="process-desc">Secondary motion, refinement and visual cleanup.</p>
+        </div>
+        <div class="process-step reveal reveal-delay-4">
+          <span class="process-num">05</span>
+          <h3 class="process-title">Final Render</h3>
+          <p class="process-desc">Lighting, rendering and delivery of the finished piece.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA BANNER ===== -->
+  <section class="cta-banner reveal" id="cta">
+    <div class="cta-banner-glow" aria-hidden="true"></div>
+    <div class="container cta-banner-inner">
+      <p class="cta-eyebrow">Have a project in mind?</p>
+      <h2 class="cta-title">Let's Create<br>Something Great.</h2>
+      <a href="#contact" class="btn btn-primary btn-lg">Contact Me</a>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section class="section section-contact" id="contact">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-num">06</span>
+        <div>
+          <span class="section-label">Get In Touch</span>
+          <h2 class="section-title">Contact</h2>
+          <p class="section-desc" id="contact-email-hint">Reach out for collaborations and projects.</p>
+        </div>
+      </div>
+
+      <div class="contact-showcase" id="contact-links"></div>
     </div>
   </section>
 
   <!-- ===== FOOTER ===== -->
   <footer class="footer">
     <div class="container">
-      <p>&copy; <span id="footer-year"></span> <span id="footer-name">Arman Khachatryan</span>. All rights reserved.</p>
+      <div class="footer-top">
+        <div class="footer-brand-block">
+          <span class="footer-logo">KHACHATRYAN</span>
+          <span class="footer-role" id="footer-tagline">3D Animator</span>
+          <span class="footer-role-sub">Creative Developer</span>
+        </div>
+
+        <nav class="footer-nav">
+          <a href="#hero">Home</a>
+          <a href="#about">About</a>
+          <a href="#work">Work</a>
+          <a href="#skills">Skills</a>
+          <a href="#process">Process</a>
+          <a href="#contact">Contact</a>
+        </nav>
+
+        <div class="footer-social" id="footer-social"></div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copy">&copy; <span id="footer-year"></span> <span id="footer-name">Arman Khachatryan</span></p>
+        <p class="footer-note">Built with passion for animation & code.</p>
+      </div>
     </div>
   </footer>
 
