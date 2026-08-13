@@ -15,6 +15,7 @@ const path = require("path");
 const authRoutes = require("./routes/auth");
 const profileRoutes = require("./routes/profile");
 const projectRoutes = require("./routes/projects");
+const initDatabase = require("./database/init");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -54,8 +55,24 @@ app.get("/project/:id", (req, res) => {
   res.sendFile(path.join(__dirname, "../client/project.html"));
 });
 
-// Start server
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Portfolio site running at http://localhost:${PORT}`);
-  console.log(`Admin panel at http://localhost:${PORT}/admin`);
-});
+// Start server (initialize DB tables first)
+async function startServer() {
+  try {
+    if (process.env.DATABASE_URL) {
+      await initDatabase();
+      console.log("Database connected and tables ready.");
+    } else {
+      console.warn("Warning: DATABASE_URL not set — project API will not work.");
+    }
+  } catch (err) {
+    console.error("Database connection failed:", err.message);
+    process.exit(1);
+  }
+
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Portfolio site running at http://localhost:${PORT}`);
+    console.log(`Admin panel at http://localhost:${PORT}/admin`);
+  });
+}
+
+startServer();

@@ -1,6 +1,6 @@
 /**
  * Project routes — CRUD for portfolio projects.
- * Projects are stored in server/data/projects.json.
+ * Projects are stored in PostgreSQL.
  * Uploaded files go to client/images/ and client/videos/.
  */
 
@@ -8,10 +8,10 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
+const pool = require("../db");
 const { requireAuth } = require("../middleware/auth");
 
 const router = express.Router();
-const projectsPath = path.join(__dirname, "../data/projects.json");
 const imagesDir = path.join(__dirname, "../../client/images");
 const videosDir = path.join(__dirname, "../../client/videos");
 
@@ -22,15 +22,22 @@ const videosDir = path.join(__dirname, "../../client/videos");
   }
 });
 
-// Helper: read all projects from JSON file
-function readProjects() {
-  const data = fs.readFileSync(projectsPath, "utf8");
-  return JSON.parse(data);
-}
-
-// Helper: save projects to JSON file
-function saveProjects(projects) {
-  fs.writeFileSync(projectsPath, JSON.stringify(projects, null, 2));
+// Map DB row → API response (keeps frontend-compatible field names)
+function rowToProject(row) {
+  return {
+    id: row.id,
+    title: row.title,
+    description: row.description,
+    category: row.category,
+    projectType: row.project_type,
+    thumbnail: row.thumbnail_url,
+    videoUrl: row.video_url,
+    videoFile: row.video_file,
+    projectUrl: row.project_url,
+    createdAt: row.created_at instanceof Date
+      ? row.created_at.toISOString()
+      : row.created_at,
+  };
 }
 
 // Helper: generate unique ID
@@ -59,25 +66,38 @@ const upload = multer({
 });
 
 // GET /api/projects — get all projects (public)
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const projects = readProjects();
-    res.json(projects);
+    const result = await pool.query(
+      "SELECT * FROM projects ORDER BY created_at DESC"
+    );
+    res.json(result.rows.map(rowToProject));
   } catch (err) {
+    console.error("GET /api/projects error:", err.message);
+    if (err.message.includes("connect") || err.code === "ECONNREFUSED") {
+      return res.status(500).json({ error: "Database connection failed." });
+    }
     res.status(500).json({ error: "Could not load projects." });
   }
 });
 
 // GET /api/projects/:id — get single project (public)
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
-    const projects = readProjects();
-    const project = projects.find((p) => p.id === req.params.id);
-    if (!project) {
+    const result = await pool.query("SELECT * FROM projects WHERE id = $1", [
+      req.params.id,
+    ]);
+
+    if (result.rows.length === 0) {
       return res.status(404).json({ error: "Project not found." });
     }
-    res.json(project);
+
+    res.json(rowToProject(result.rows[0]));
   } catch (err) {
+    console.error("GET /api/projects/:id error:", err.message);
+    if (err.message.includes("connect") || err.code === "ECONNREFUSED") {
+      return res.status(500).json({ error: "Database connection failed." });
+    }
     res.status(500).json({ error: "Could not load project." });
   }
 });
@@ -90,36 +110,46 @@ router.post(
     { name: "thumbnail", maxCount: 1 },
     { name: "video", maxCount: 1 },
   ]),
-  (req, res) => {
+  async (req, res) => {
     try {
       const { title, description, category, projectType, videoUrl, projectUrl } =
         req.body;
 
-      const projects = readProjects();
+      const id = generateId();
+      const thumbnail = req.files?.thumbnail
+        ? "/images/" + req.files.thumbnail[0].filename
+        : "/images/placeholder-project.svg";
+      const videoFile = req.files?.video
+        ? "/videos/" + req.files.video[0].filename
+        : "";
 
-      const newProject = {
-        id: generateId(),
-        title: title || "Untitled",
-        description: description || "",
-        category: category || "Other",
-        projectType: projectType || "video",
-        thumbnail: req.files?.thumbnail
-          ? "/images/" + req.files.thumbnail[0].filename
-          : "/images/placeholder-project.svg",
-        videoUrl: videoUrl || "",
-        videoFile: req.files?.video
-          ? "/videos/" + req.files.video[0].filename
-          : "",
-        projectUrl: projectUrl || "",
-        createdAt: new Date().toISOString(),
-      };
+      const result = await pool.query(
+        `INSERT INTO projects (
+          id, title, description, category, project_type,
+          thumbnail_url, video_url, video_file, project_url
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        RETURNING *`,
+        [
+          id,
+          title || "Untitled",
+          description || "",
+          category || "Other",
+          projectType || "video",
+          thumbnail,
+          videoUrl || "",
+          videoFile,
+          projectUrl || "",
+        ]
+      );
 
-      projects.unshift(newProject);
-      saveProjects(projects);
-
+      const newProject = rowToProject(result.rows[0]);
       res.json({ success: true, project: newProject });
     } catch (err) {
-      res.status(500).json({ error: "Could not add project." });
+      console.error("POST /api/projects error:", err.message);
+      if (err.message.includes("connect") || err.code === "ECONNREFUSED") {
+        return res.status(500).json({ error: "Database connection failed." });
+      }
+      res.status(500).json({ error: "Failed to create project." });
     }
   }
 );
@@ -132,57 +162,90 @@ router.put(
     { name: "thumbnail", maxCount: 1 },
     { name: "video", maxCount: 1 },
   ]),
-  (req, res) => {
+  async (req, res) => {
     try {
-      const projects = readProjects();
-      const index = projects.findIndex((p) => p.id === req.params.id);
+      const existingResult = await pool.query(
+        "SELECT * FROM projects WHERE id = $1",
+        [req.params.id]
+      );
 
-      if (index === -1) {
+      if (existingResult.rows.length === 0) {
         return res.status(404).json({ error: "Project not found." });
       }
 
-      const existing = projects[index];
+      const existing = existingResult.rows[0];
       const { title, description, category, projectType, videoUrl, projectUrl } =
         req.body;
 
-      projects[index] = {
-        ...existing,
-        title: title ?? existing.title,
-        description: description ?? existing.description,
-        category: category ?? existing.category,
-        projectType: projectType ?? existing.projectType,
-        videoUrl: videoUrl ?? existing.videoUrl,
-        projectUrl: projectUrl ?? existing.projectUrl,
-        thumbnail: req.files?.thumbnail
-          ? "/images/" + req.files.thumbnail[0].filename
-          : existing.thumbnail,
-        videoFile: req.files?.video
-          ? "/videos/" + req.files.video[0].filename
-          : existing.videoFile,
-      };
+      const updatedTitle = title ?? existing.title;
+      const updatedDescription = description ?? existing.description;
+      const updatedCategory = category ?? existing.category;
+      const updatedProjectType = projectType ?? existing.project_type;
+      const updatedVideoUrl = videoUrl ?? existing.video_url;
+      const updatedProjectUrl = projectUrl ?? existing.project_url;
+      const updatedThumbnail = req.files?.thumbnail
+        ? "/images/" + req.files.thumbnail[0].filename
+        : existing.thumbnail_url;
+      const updatedVideoFile = req.files?.video
+        ? "/videos/" + req.files.video[0].filename
+        : existing.video_file;
 
-      saveProjects(projects);
-      res.json({ success: true, project: projects[index] });
+      const result = await pool.query(
+        `UPDATE projects SET
+          title = $1,
+          description = $2,
+          category = $3,
+          project_type = $4,
+          video_url = $5,
+          project_url = $6,
+          thumbnail_url = $7,
+          video_file = $8,
+          updated_at = NOW()
+        WHERE id = $9
+        RETURNING *`,
+        [
+          updatedTitle,
+          updatedDescription,
+          updatedCategory,
+          updatedProjectType,
+          updatedVideoUrl,
+          updatedProjectUrl,
+          updatedThumbnail,
+          updatedVideoFile,
+          req.params.id,
+        ]
+      );
+
+      res.json({ success: true, project: rowToProject(result.rows[0]) });
     } catch (err) {
-      res.status(500).json({ error: "Could not update project." });
+      console.error("PUT /api/projects/:id error:", err.message);
+      if (err.message.includes("connect") || err.code === "ECONNREFUSED") {
+        return res.status(500).json({ error: "Database connection failed." });
+      }
+      res.status(500).json({ error: "Failed to update project." });
     }
   }
 );
 
 // DELETE /api/projects/:id — delete project (admin only)
-router.delete("/:id", requireAuth, (req, res) => {
+router.delete("/:id", requireAuth, async (req, res) => {
   try {
-    const projects = readProjects();
-    const filtered = projects.filter((p) => p.id !== req.params.id);
+    const result = await pool.query(
+      "DELETE FROM projects WHERE id = $1 RETURNING id",
+      [req.params.id]
+    );
 
-    if (filtered.length === projects.length) {
+    if (result.rows.length === 0) {
       return res.status(404).json({ error: "Project not found." });
     }
 
-    saveProjects(filtered);
     res.json({ success: true, message: "Project deleted." });
   } catch (err) {
-    res.status(500).json({ error: "Could not delete project." });
+    console.error("DELETE /api/projects/:id error:", err.message);
+    if (err.message.includes("connect") || err.code === "ECONNREFUSED") {
+      return res.status(500).json({ error: "Database connection failed." });
+    }
+    res.status(500).json({ error: "Failed to delete project." });
   }
 });
 
